@@ -189,6 +189,11 @@ public class PanelCoches extends JPanel {
 		});
 		
 		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				borrar();
+			}
+		});
 		panel.add(btnEliminar);
 
 		
@@ -207,6 +212,20 @@ public class PanelCoches extends JPanel {
 		for (Fabricante f : fabricantes) {
 			this.jcbFabricante.addItem(f);
 		}
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private void borrar() {
+		String posiblesRespuestas[] = {"Sí","No"};
+		// En esta opci�n se utiliza un showOptionDialog en el que personalizo el icono mostrado
+		int opcionElegida = JOptionPane.showOptionDialog(null, "¿Desea eliminar?", "Gestión venta de coches", 
+		        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, posiblesRespuestas, posiblesRespuestas[1]);
+	    if(opcionElegida == 0) {
+	    	ControladorCoche.getInstance().borrar(this.actual);
+	    }
 	}
 	
 	/**

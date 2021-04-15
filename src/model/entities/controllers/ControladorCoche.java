@@ -133,10 +133,10 @@ public class ControladorCoche {
 	 * @param id
 	 * @return
 	 */
-	public void borrar(Coche c) {
+	public void borrar(Coche f) {
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
-		em.remove(c);
+		em.remove(f);
 		em.getTransaction().commit();
 		em.close();
 	}
