@@ -11,7 +11,6 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="cliente")
 @NamedQuery(name="Cliente.findAll", query="SELECT c FROM Cliente c")
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -24,20 +23,15 @@ public class Cliente implements Serializable {
 
 	private String apellidos;
 
-
 	private String dniNie;
-
-
-	private String email;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaNac;
 
 	private String localidad;
 
-
 	private String nombre;
-	
+
 	//bi-directional many-to-one association to Venta
 	@OneToMany(mappedBy="cliente")
 	private List<Venta> ventas;
@@ -61,7 +55,6 @@ public class Cliente implements Serializable {
 		this.activo = activo;
 	}
 
-
 	public String getApellidos() {
 		return this.apellidos;
 	}
@@ -70,21 +63,12 @@ public class Cliente implements Serializable {
 		this.apellidos = apellidos;
 	}
 
-
 	public String getDniNie() {
 		return this.dniNie;
 	}
 
 	public void setDniNie(String dniNie) {
 		this.dniNie = dniNie;
-	}
-
-	public String getEmail() {
-		return this.email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public Date getFechaNac() {
@@ -95,7 +79,6 @@ public class Cliente implements Serializable {
 		this.fechaNac = fechaNac;
 	}
 
-
 	public String getLocalidad() {
 		return this.localidad;
 	}
@@ -103,7 +86,6 @@ public class Cliente implements Serializable {
 	public void setLocalidad(String localidad) {
 		this.localidad = localidad;
 	}
-
 
 	public String getNombre() {
 		return this.nombre;

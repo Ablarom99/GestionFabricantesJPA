@@ -10,6 +10,10 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.swing.JTextField;
+
+import model.entities.Cliente;
+import model.entities.controllers.ControladorCliente;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -50,7 +54,7 @@ public class PanelCliente extends JPanel{
 			this.jtflocalidad.setText(this.actual.getLocalidad());
 			this.jtfFechaNac.setText(this.formatoFecha.format(this.actual.getFechaNac()));
 			this.jtfdniNie.setText(this.actual.getDniNie());
-			this.jcbActivo.setSelected(this.actual.isActivo());
+			this.jcbActivo.setSelected(this.actual.getActivo());
 		}
 	}
 	private void cargarActualDesdePantalla() {

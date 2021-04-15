@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.entities.Cliente;
+
 import javax.persistence.EntityManager;
 
 import com.mysql.cj.Query;
@@ -132,7 +134,7 @@ public Cliente findAnterior (int idActual) {
 
 public static int convertidorActivo(Cliente c) {
 	
-    if (c.isActivo()) {
+    if (c.getActivo()) {
         return 1;
     }
     return 0;

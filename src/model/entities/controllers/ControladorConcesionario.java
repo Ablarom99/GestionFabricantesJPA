@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.entities.Concesionario;
+
 public class ControladorConcesionario {
 
 	private static ControladorConcesionario instance = null;

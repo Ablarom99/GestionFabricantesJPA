@@ -9,6 +9,11 @@ import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
+
+import model.entities.Fabricante;
+import model.entities.controllers.ControladorCoche;
+import model.entities.controllers.ControladorFabricante;
+
 import java.awt.Insets;
 import javax.swing.JPanel;
 import java.awt.FlowLayout;
@@ -205,19 +210,13 @@ public class PanelFabricantes extends JPanel {
 	 */
 	private void guardar () {
 		cargarActualDesdePantalla();
-		// Decido si se trata de guardar un registro existente o nuevo
-		if (this.actual.getId() != 0) { // Modificacion
-			int regsAfec = ControladorFabricante.getInstance().modificar(this.actual);
-			if (regsAfec > 0) {
-				JOptionPane.showMessageDialog(null, "Registro modificado correctamente");
-			}
+		boolean resultado = ControladorFabricante.getInstance().guardar(this.actual);
+		if (resultado == true && this.actual != null && this.actual.getId() > 0) {
+			this.jtfId.setText("" + this.actual.getId());
+			JOptionPane.showMessageDialog(null, "Registro guardado correctamente");
 		}
-		else { // Alta -  nuevo
-			int idNuevoReg = ControladorFabricante.getInstance().nuevo(this.actual);
-			if (idNuevoReg > 0) {
-				this.jtfId.setText("" + idNuevoReg);
-				JOptionPane.showMessageDialog(null, "Registro insertado correctamente");
-			}
+		else {
+			JOptionPane.showMessageDialog(null, "Error al guardar");
 		}
 	}
 	
@@ -234,16 +233,12 @@ public class PanelFabricantes extends JPanel {
 	 * 
 	 */
 	private void borrar() {
-		String posiblesRespuestas[] = {"Si�","No"};
-		// En esta opcion se utiliza un showOptionDialog en el que personalizo el icono mostrado
-		int opcionElegida = JOptionPane.showOptionDialog(null, "�Desea eliminar?", "Gestion venta de coches", 
+		String posiblesRespuestas[] = {"Sí","No"};
+		// En esta opci�n se utiliza un showOptionDialog en el que personalizo el icono mostrado
+		int opcionElegida = JOptionPane.showOptionDialog(null, "¿Desea eliminar?", "Gestión venta de coches", 
 		        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, posiblesRespuestas, posiblesRespuestas[1]);
 	    if(opcionElegida == 0) {
-	    	int regsAfectados = ControladorFabricante.getInstance().borrar(this.actual.getId());
-	    	if (regsAfectados > 0) {
-	    		vaciarCampos();
-	    		JOptionPane.showMessageDialog(null, "Eliminado correctamente");
-	    	}
+	    	ControladorFabricante.getInstance().borrar(this.actual);
 	    }
 	}
 }

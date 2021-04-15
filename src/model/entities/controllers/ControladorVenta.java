@@ -7,6 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 
+import model.entities.Venta;
+import model.entities.Coche;
+import model.entities.Cliente;
+import model.entities.Concesionario;
+import model.entities.Fabricante;
+
+
 public class ControladorVenta {
 
 	private static ControladorVenta instance = null;
@@ -44,9 +51,9 @@ public class ControladorVenta {
 			if (rs.next()) {
 				v = new Venta();
 				v.setId(rs.getInt("id"));
-				v.setIdCliente(rs.getInt("idCliente"));
-				v.setIdConcesionario(rs.getInt("idConcesionario"));
-				v.setIdCoche(rs.getInt("idCoche"));
+				v.setCliente(rs.getInt("idCliente"));
+				v.setConcesionario(rs.getInt("idConcesionario"));
+				v.setCoche(rs.getInt("idCoche"));
 				v.setFecha(rs.getDate("fecha"));
 				v.setPrecioVenta(rs.getInt("precioVenta"));
 			}
@@ -64,9 +71,9 @@ public class ControladorVenta {
 			if (rs.next()) {
 				v = new Venta();
 				v.setId(rs.getInt("id"));
-				v.setIdCliente(rs.getInt("idCliente"));
-				v.setIdConcesionario(rs.getInt("idConcesionario"));
-				v.setIdCoche(rs.getInt("idCoche"));
+				v.setCliente(rs.getInt("idCliente"));
+				v.setConcesionario(rs.getInt("idConcesionario"));
+				v.setCoche(rs.getInt("idCoche"));
 				v.setFecha(rs.getDate("fecha"));
 				v.setPrecioVenta(rs.getInt("precioVenta"));
 			}
@@ -85,9 +92,9 @@ public class ControladorVenta {
 			if (rs.next()) {
 				v = new Venta();
 				v.setId(rs.getInt("id"));
-				v.setIdCliente(rs.getInt("idCliente"));
-				v.setIdConcesionario(rs.getInt("idConcesionario"));
-				v.setIdCoche(rs.getInt("idCoche"));
+				v.setCliente(rs.getInt("idCliente"));
+				v.setConcesionario(rs.getInt("idConcesionario"));
+				v.setCoche(rs.getInt("idCoche"));
 				v.setFecha(rs.getDate("fecha"));
 				v.setPrecioVenta(rs.getInt("precioVenta"));
 			}
@@ -107,9 +114,9 @@ public class ControladorVenta {
 			if (rs.next()) {
 				v = new Venta();
 				v.setId(rs.getInt("id"));
-				v.setIdCliente(rs.getInt("idCliente"));
-				v.setIdConcesionario(rs.getInt("idConcesionario"));
-				v.setIdCoche(rs.getInt("idCoche"));
+				v.setCliente(rs.getInt("idCliente"));
+				v.setConcesionario(rs.getInt("idConcesionario"));
+				v.setCoche(rs.getInt("idCoche"));
 				v.setFecha(rs.getDate("fecha"));
 				v.setPrecioVenta(rs.getInt("precioVenta"));
 			}

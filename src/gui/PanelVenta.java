@@ -17,6 +17,16 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.JTextField;
+
+import model.entities.Cliente;
+import model.entities.Coche;
+import model.entities.Concesionario;
+import model.entities.Venta;
+import model.entities.controllers.ControladorCliente;
+import model.entities.controllers.ControladorCoche;
+import model.entities.controllers.ControladorConcesionario;
+import model.entities.controllers.ControladorVenta;
+
 import javax.swing.JComboBox;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
@@ -148,7 +158,7 @@ public class PanelVenta extends JPanel{
 			this.jtfprecioVenta.setText("" + this.actual.getPrecioVenta());
 			// cliente
 			for (int j = 0; j < jcbCliente.getItemCount(); j++) {
-				if (this.actual.getIdCliente() == this.jcbCliente.getItemAt(j).getId()) {
+				if (this.actual.getCliente() == this.jcbCliente.getItemAt(j).getId()) {
 					this.jcbCliente.setSelectedIndex(j);
 				}
 

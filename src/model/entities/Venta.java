@@ -2,6 +2,9 @@ package model.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import model.entities.Cliente;
+
 import java.util.Date;
 
 
