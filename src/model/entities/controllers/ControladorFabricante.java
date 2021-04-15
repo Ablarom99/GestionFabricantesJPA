@@ -8,10 +8,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+
+import model.entities.Coche;
+import model.entities.Fabricante;
+
 public class ControladorFabricante {
 
 	private static ControladorFabricante instance = null;
-	public Connection conn = null;
+	
+	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("TutorialJavaCochesJPA"); 
 	
 	/**
 	 * 
@@ -28,15 +37,15 @@ public class ControladorFabricante {
 	 * 
 	 */
 	public ControladorFabricante() {
-		
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/tutorialjavacoches?serverTimezone=UTC","java", "1234");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		   
-
+	}
+	
+	
+	public Fabricante find(int id) {
+		Fabricante f = null;
+		EntityManager em = factory.createEntityManager();
+		f = (Fabricante) em.find(Fabricante.class, id);
+		em.close();
+		return f;
 	}
 	
 	
@@ -45,21 +54,14 @@ public class ControladorFabricante {
 	 * @return
 	 */
 	public Fabricante findPrimero () {
-		Fabricante f = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.fabricante order by id limit 1");
-			if (rs.next()) {
-				f = new Fabricante();
-				f.setId(rs.getInt("id"));
-				f.setCif(rs.getString("cif"));
-				f.setNombre(rs.getString("nombre"));
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return f;
+		Fabricante c = null;
+		
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.fabricante order by id limit 1", Fabricante.class);
+		c = (Fabricante) q.getSingleResult();
+		em.close();
+		
+		return c;
 	}
 	
 
@@ -68,155 +70,89 @@ public class ControladorFabricante {
 	 * @return
 	 */
 	public Fabricante findUltimo () {
-		Fabricante f = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.fabricante order by id desc limit 1");
-			if (rs.next()) {
-				f = new Fabricante();
-				f.setId(rs.getInt("id"));
-				f.setCif(rs.getString("cif"));
-				f.setNombre(rs.getString("nombre"));
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return f;
+		Fabricante c = null;
+		
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.fabricante order by id desc limit 1", Fabricante.class);
+		c = (Fabricante) q.getSingleResult();
+		em.close();
+		
+		return c;
 	}
 	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public Fabricante findSiguiente (int idActual) {
-		Fabricante f = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.fabricante where id > " + idActual + " order by id limit 1");
-			if (rs.next()) {
-				f = new Fabricante();
-				f.setId(rs.getInt("id"));
-				f.setCif(rs.getString("cif"));
-				f.setNombre(rs.getString("nombre"));
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return f;
+		Fabricante c = null;
+		
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.fabricante where id > ? order by id limit 1", Fabricante.class);
+		q.setParameter(1, idActual);
+		c = (Fabricante) q.getSingleResult();
+		em.close();
+		
+		return c;
 	}
 	
-
 
 	/**
 	 * 
 	 * @return
 	 */
 	public Fabricante findAnterior (int idActual) {
-		Fabricante f = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.fabricante where id < " + idActual + " order by id desc limit 1");
-			if (rs.next()) {
-				f = new Fabricante();
-				f.setId(rs.getInt("id"));
-				f.setCif(rs.getString("cif"));
-				f.setNombre(rs.getString("nombre"));
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return f;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public int modificar (Fabricante f) {
-		int registrosAfectados = 0;
-		try {
-			Statement s = (Statement) this.conn.createStatement(); 
-
-			registrosAfectados = s.executeUpdate ("update fabricante set cif='" + f.getCif() + "', " +
-					" nombre='" + f.getNombre() + "' where id=" + f.getId() + ";");
-		   	
-			// Cierre de los elementos
-			s.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return registrosAfectados;
+		Fabricante c = null;
 		
-	}
-
-	/**
-	 * 
-	 * @param f
-	 * @return
-	 */
-	public int nuevo (Fabricante f) {
-		int registrosAfectados = 0;
-		int idNuevoRegistro = 0;
-		try {
-			Statement s = (Statement) this.conn.createStatement(); 
-
-			idNuevoRegistro = nextId();
-			registrosAfectados = s.executeUpdate ("insert into fabricante values(" + idNuevoRegistro + ", " +
-			"'" + f.getCif() + "', '" + f.getNombre() + "');");
-		   	
-			// Cierre de los elementos
-			s.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return idNuevoRegistro;
-
-	}
-
-	/**
-	 * 
-	 * @return
-	 * @throws SQLException
-	 */
-	private int nextId () throws SQLException {
-		Statement s = (Statement) this.conn.createStatement();
-
-		String sql = "select max(id) from tutorialjavacoches.fabricante";
-		ResultSet rs = s.executeQuery(sql);
-		int max = 1; 
-		if (rs.next() ) {
-			max = rs.getInt(1);
-		}
-		rs.close();
-		s.close();
-		return max + 1;
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.fabricante where id < ? order by id desc limit 1", Fabricante.class);
+		q.setParameter(1, idActual);
+		c = (Fabricante) q.getSingleResult();
+		em.close();
+		
+		return c;		
 	}
 	
+
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean guardar (Fabricante f) {
+		try {
+			EntityManager em = factory.createEntityManager();
+			em.getTransaction().begin();
+			if (f.getId() == 0) {
+				em.persist(f);
+			}
+			else {
+				em.merge(f);
+			}
+			em.getTransaction().commit();
+			em.close();
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
 	
 	/**
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public int borrar(int id) {
-		int registrosAfectados = 0;
-		try {
-			Statement s = (Statement) this.conn.createStatement(); 
-
-			registrosAfectados = s.executeUpdate ("delete from fabricante where id=" + id + ";");
-			
-			// Cierre de los elementos
-			s.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return registrosAfectados;
+	public void borrar(Fabricante f) {
+		EntityManager em = factory.createEntityManager();
+		em.getTransaction().begin();
+		em.remove(f);
+		em.getTransaction().commit();
+		em.close();
 	}
 
 	
@@ -225,25 +161,14 @@ public class ControladorFabricante {
 	 * @return
 	 */
 	public List<Fabricante> findAll () {
-		List<Fabricante> fabricantes = new ArrayList<Fabricante>();
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.fabricante");
-			while (rs.next()) {
-				Fabricante f = new Fabricante();
-				f.setId(rs.getInt("id"));
-				f.setCif(rs.getString("cif"));
-				f.setNombre(rs.getString("nombre"));
-				// Agrego el fabricante a la lista
-				fabricantes.add(f);
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return fabricantes;
+		EntityManager em = factory.createEntityManager();
+		
+		Query q = em.createNativeQuery("SELECT * FROM fabricante", Fabricante.class);
+		
+		List<Fabricante> list = (List<Fabricante>) q.getResultList();
+		em.close();
+		return list;
 	}
 	
-
 
 }
