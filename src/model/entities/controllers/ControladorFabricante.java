@@ -20,7 +20,7 @@ public class ControladorFabricante {
 
 	private static ControladorFabricante instance = null;
 	
-	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("TutorialJavaCochesJPA"); 
+	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("GestionFabricantesJPA"); 
 	
 	/**
 	 * 

@@ -1,17 +1,20 @@
 package model.entities.controllers;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import model.entities.Coche;
+import model.entities.Fabricante;
 
 public class ControladorCoche {
 
 	private static ControladorCoche instance = null;
 
-	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("TutorialJavaCochesJPA"); 
+	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("GestionFabricantesJPA"); 
 	
 	/**
 	 * 
@@ -136,6 +139,16 @@ public class ControladorCoche {
 		em.remove(c);
 		em.getTransaction().commit();
 		em.close();
+	}
+
+	public List<Coche> findAll() {
+EntityManager em = factory.createEntityManager();
+		
+		Query q = em.createNativeQuery("SELECT * FROM fabricante", Fabricante.class);
+		
+		List<Coche> list = (List<Coche>) q.getResultList();
+		em.close();
+		return list;
 	}
 
 	
