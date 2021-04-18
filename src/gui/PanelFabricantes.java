@@ -239,6 +239,7 @@ public class PanelFabricantes extends JPanel {
 		        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, posiblesRespuestas, posiblesRespuestas[1]);
 	    if(opcionElegida == 0) {
 	    	ControladorFabricante.getInstance().borrar(this.actual);
+	    	vaciarCampos();
 	    }
 	}
 }

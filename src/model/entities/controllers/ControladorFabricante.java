@@ -150,6 +150,7 @@ public class ControladorFabricante {
 	public void borrar(Fabricante f) {
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
+		f=em.merge(f);
 		em.remove(f);
 		em.getTransaction().commit();
 		em.close();

@@ -12,10 +12,14 @@ import java.util.List;
 import javax.swing.JTextField;
 
 import model.entities.Concesionario;
+import model.entities.Fabricante;
+import model.entities.controllers.ControladorCoche;
 import model.entities.controllers.ControladorConcesionario;
+import model.entities.controllers.ControladorFabricante;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 
 public class PanelConcesionario extends JPanel{
 	Concesionario actual = new Concesionario();
@@ -23,6 +27,7 @@ public class PanelConcesionario extends JPanel{
 	private JTextField jtfCif;
 	private JTextField jtfNombre;
 	private JTextField jtfLocalidad;
+	private JComboBox<Concesionario> jcbConcesionario;
 
 	
 	
@@ -174,15 +179,11 @@ public class PanelConcesionario extends JPanel{
 		});
 		panel.add(btnBorrar);
 		
-		cargarDatosConcesionario();
 		this.actual = ControladorConcesionario.getInstance().findPrimero();
 		cargarActualEnPantalla();
 
 	}
 	
-	private void cargarDatosConcesionario() {
-		List<Concesionario> concesionarios = ControladorConcesionario.getInstance().findAll();
-	}
 	
 	private void vaciarCampos() {
 		this.jtfId.setText("0");
@@ -192,16 +193,13 @@ public class PanelConcesionario extends JPanel{
 	}
 	
 	private void borrar() {
-		String posiblesRespuestas[] = {"Si�","No"};
-		// En esta opcion se utiliza un showOptionDialog en el que personalizo el icono mostrado
-		int opcionElegida = JOptionPane.showOptionDialog(null, "�Desea eliminar?", "Gestion venta de coches", 
+		String posiblesRespuestas[] = {"Sí","No"};
+		// En esta opci�n se utiliza un showOptionDialog en el que personalizo el icono mostrado
+		int opcionElegida = JOptionPane.showOptionDialog(null, "¿Desea eliminar?", "Gestión venta de coches", 
 		        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, posiblesRespuestas, posiblesRespuestas[1]);
 	    if(opcionElegida == 0) {
-	    	int regsAfectados = ControladorConcesionario.getInstance().borrar(this.actual.getId());
-	    	if (regsAfectados > 0) {
-	    		vaciarCampos();
-	    		JOptionPane.showMessageDialog(null, "Eliminado correctamente");
-	    	}
+	    	ControladorConcesionario.getInstance().borrar(this.actual);
+	    	vaciarCampos();
 	    }
 	}
 	
@@ -212,31 +210,30 @@ public class PanelConcesionario extends JPanel{
 			this.jtfNombre.setText(this.actual.getNombre());
 			this.jtfLocalidad.setText(this.actual.getLocalidad());
 			
+			
 		}
 	}
+	
 	
 	private void cargarActualDesdePantalla() {
 		this.actual.setId(Integer.parseInt(jtfId.getText()));
 		this.actual.setCif(jtfCif.getText());
 		this.actual.setNombre(jtfNombre.getText());
 		this.actual.setLocalidad(jtfLocalidad.getText());
+		
+		
 	}
+	
 	
 	private void guardar () {
 		cargarActualDesdePantalla();
-		// Decido si se trata de guardar un registro existente o nuevo
-		if (this.actual.getId() != 0) { // Modificación
-			int regsAfec = ControladorConcesionario.getInstance().modificar(this.actual);
-			if (regsAfec > 0) {
-				JOptionPane.showMessageDialog(null, "Registro modificado correctamente");
-			}
+		boolean resultado = ControladorConcesionario.getInstance().guardar(this.actual);
+		if (resultado == true && this.actual != null && this.actual.getId() > 0) {
+			this.jtfId.setText("" + this.actual.getId());
+			JOptionPane.showMessageDialog(null, "Registro guardado correctamente");
 		}
-		else { // Alta -  nuevo
-			int idNuevoReg = ControladorConcesionario.getInstance().nuevo(this.actual);
-			if (idNuevoReg > 0) {
-				this.jtfId.setText("" + idNuevoReg);
-				JOptionPane.showMessageDialog(null, "Registro insertado correctamente");
-			}
+		else {
+			JOptionPane.showMessageDialog(null, "Error al guardar");
 		}
 	}
 

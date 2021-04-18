@@ -187,13 +187,9 @@ public class PanelCoches extends JPanel {
 				vaciarCampos();
 			}
 		});
+		panel.add(btnNuevo);
 		
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				borrar();
-			}
-		});
 		panel.add(btnEliminar);
 
 		
@@ -212,20 +208,6 @@ public class PanelCoches extends JPanel {
 		for (Fabricante f : fabricantes) {
 			this.jcbFabricante.addItem(f);
 		}
-	}
-	
-	
-	/**
-	 * 
-	 */
-	private void borrar() {
-		String posiblesRespuestas[] = {"Sí","No"};
-		// En esta opci�n se utiliza un showOptionDialog en el que personalizo el icono mostrado
-		int opcionElegida = JOptionPane.showOptionDialog(null, "¿Desea eliminar?", "Gestión venta de coches", 
-		        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, posiblesRespuestas, posiblesRespuestas[1]);
-	    if(opcionElegida == 0) {
-	    	ControladorCoche.getInstance().borrar(this.actual);
-	    }
 	}
 	
 	/**
@@ -265,6 +247,18 @@ public class PanelCoches extends JPanel {
 	/**
 	 * 
 	 */
+	private void vaciarCampos() {
+		this.jtfId.setText("0");
+		this.jtfBastidor.setText("");
+		this.jtfModelo.setText("");
+		this.jtfColor.setText("");
+		this.jcbFabricante.setSelectedIndex(0);
+	}
+	
+	
+	/**
+	 * 
+	 */
 	private void guardar () {
 		cargarActualDesdePantalla();
 		boolean resultado = ControladorCoche.getInstance().guardar(this.actual);
@@ -276,13 +270,15 @@ public class PanelCoches extends JPanel {
 			JOptionPane.showMessageDialog(null, "Error al guardar");
 		}
 	}
-	
-	private void vaciarCampos() {
-		this.jtfId.setText("0");
-		this.jtfBastidor.setText("");
-		this.jtfModelo.setText("");
-		this.jtfColor.setText("");
-		this.jcbFabricante.setSelectedIndex(0);
+	private void borrar() {
+		String posiblesRespuestas[] = {"Sí","No"};
+		// En esta opci�n se utiliza un showOptionDialog en el que personalizo el icono mostrado
+		int opcionElegida = JOptionPane.showOptionDialog(null, "¿Desea eliminar?", "Gestión venta de coches", 
+		        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, posiblesRespuestas, posiblesRespuestas[1]);
+	    if(opcionElegida == 0) {
+	    	ControladorCoche.getInstance().borrar(this.actual);
+	    	vaciarCampos();
+	    }
 	}
 	
 

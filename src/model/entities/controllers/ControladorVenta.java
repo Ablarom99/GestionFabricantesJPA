@@ -1,202 +1,146 @@
 package model.entities.controllers;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
-import model.entities.Venta;
 import model.entities.Coche;
-import model.entities.Cliente;
-import model.entities.Concesionario;
-import model.entities.Fabricante;
-
+import model.entities.Venta;
 
 public class ControladorVenta {
 
 	private static ControladorVenta instance = null;
-	public Connection conn = null;
-	private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 
+	private EntityManagerFactory factory = Persistence.createEntityManagerFactory("GestionFabricantesJPA"); 
+	
 	/**
 	 * 
 	 * @return
 	 */
-	public static ControladorVenta getInstance() {
+	public static ControladorVenta getInstance () {
 		if (instance == null) {
 			instance = new ControladorVenta();
 		}
 		return instance;
 	}
-
+	
+	/**
+	 * 
+	 */
 	public ControladorVenta() {
-
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = (Connection) DriverManager
-					.getConnection("jdbc:mysql://localhost/tutorialjavacoches?serverTimezone=UTC", "java", "1234");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
-
-	public Venta findPrimero() {
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Venta findPrimero () {
 		Venta v = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs = s.executeQuery("select * from tutorialjavacoches.venta order by id limit 1");
-			if (rs.next()) {
-				v = new Venta();
-				v.setId(rs.getInt("id"));
-				v.setCliente(rs.getInt("idCliente"));
-				v.setConcesionario(rs.getInt("idConcesionario"));
-				v.setCoche(rs.getInt("idCoche"));
-				v.setFecha(rs.getDate("fecha"));
-				v.setPrecioVenta(rs.getInt("precioVenta"));
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.venta order by id limit 1", Venta.class);
+		v = (Venta) q.getSingleResult();
+		em.close();
+		
 		return v;
 	}
 	
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Venta findUltimo () {
 		Venta v = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.venta order by id desc limit 1");
-			if (rs.next()) {
-				v = new Venta();
-				v.setId(rs.getInt("id"));
-				v.setCliente(rs.getInt("idCliente"));
-				v.setConcesionario(rs.getInt("idConcesionario"));
-				v.setCoche(rs.getInt("idCoche"));
-				v.setFecha(rs.getDate("fecha"));
-				v.setPrecioVenta(rs.getInt("precioVenta"));
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.venta order by id desc limit 1", Venta.class);
+		v = (Venta) q.getSingleResult();
+		em.close();
+		
 		return v;
 	}
 	
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Venta findSiguiente (int idActual) {
 		Venta v = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.venta where id > " + idActual + " order by id limit 1");
-			if (rs.next()) {
-				v = new Venta();
-				v.setId(rs.getInt("id"));
-				v.setCliente(rs.getInt("idCliente"));
-				v.setConcesionario(rs.getInt("idConcesionario"));
-				v.setCoche(rs.getInt("idCoche"));
-				v.setFecha(rs.getDate("fecha"));
-				v.setPrecioVenta(rs.getInt("precioVenta"));
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.venta where id > ? order by id limit 1", Venta.class);
+		q.setParameter(1, idActual);
+		v = (Venta) q.getSingleResult();
+		em.close();
+		
 		return v;
 	}
 	
-	
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Venta findAnterior (int idActual) {
 		Venta v = null;
-		try {
-			Statement s = this.conn.createStatement();
-			ResultSet rs =  s.executeQuery("select * from tutorialjavacoches.venta where id < " + idActual + " order by id desc limit 1");
-			if (rs.next()) {
-				v = new Venta();
-				v.setId(rs.getInt("id"));
-				v.setCliente(rs.getInt("idCliente"));
-				v.setConcesionario(rs.getInt("idConcesionario"));
-				v.setCoche(rs.getInt("idCoche"));
-				v.setFecha(rs.getDate("fecha"));
-				v.setPrecioVenta(rs.getInt("precioVenta"));
-			}
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return v;
-	}
-
-	public int nuevo (Venta v) {
-		int registrosAfectados = 0;
-		int idNuevoRegistro = 0;
-		try {
-			Statement s = (Statement) this.conn.createStatement(); 
-
-			idNuevoRegistro = nextId();
-			registrosAfectados = s.executeUpdate ("insert into venta values(" + idNuevoRegistro + ", " +
-			"'" + v.getIdCliente() + "', '" + v.getIdConcesionario() + "', '" + v.getIdCoche() + "', '" + formatoFecha.format(v.getFecha()) + "', '" + v.getPrecioVenta() + "');");
-		   	
-			// Cierre de los elementos
-			s.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return idNuevoRegistro;
-
-	}
-	
-	private int nextId () throws SQLException {
-		Statement s = (Statement) this.conn.createStatement();
-
-		String sql = "select max(id) from tutorialjavacoches.venta";
-		ResultSet rs = s.executeQuery(sql);
-		int max = 1; 
-		if (rs.next() ) {
-			max = rs.getInt(1);
-		}
-		rs.close();
-		s.close();
-		return max + 1;
-	}
-	
-	
-	public int borrar(int id) {
-		int registrosAfectados = 0;
-		try {
-			Statement s = (Statement) this.conn.createStatement(); 
-
-			registrosAfectados = s.executeUpdate ("delete from venta where id=" + id + ";");
-			
-			// Cierre de los elementos
-			s.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return registrosAfectados;
-	}
-	
-	
-	
-	public int modificar (Venta c) {
 		
-		int registrosAfectados = 0;
-		try {
-			Statement s = (Statement) this.conn.createStatement(); 
-
-			registrosAfectados = s.executeUpdate ("update coche set idCliente=" + c.getIdCliente() + ", " +
-					" idConcesionario='" + c.getIdConcesionario() + "', idCoche='" + c.getIdCoche() + "', fecha='" + formatoFecha.format(c.getFecha()) + "', precioVenta='" + c.getPrecioVenta() + "' where id=" + c.getId() + ";");
-		   	
-			// Cierre de los elementos
-			s.close();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return registrosAfectados;	
+		EntityManager em = factory.createEntityManager();
+		Query q = em.createNativeQuery("select * from tutorialjavacoches.venta where id < ? order by id desc limit 1", Venta.class);
+		q.setParameter(1, idActual);
+		v = (Venta) q.getSingleResult();
+		em.close();
+		
+		return v;		
 	}
 	
+
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean guardar (Venta v) {
+		try {
+			EntityManager em = factory.createEntityManager();
+			em.getTransaction().begin();
+			if (v.getId() == 0) {
+				em.persist(v);
+			}
+			else {
+				em.merge(v);
+			}
+			em.getTransaction().commit();
+			em.close();
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public void borrar(Venta v) {
+		EntityManager em = factory.createEntityManager();
+		em.getTransaction().begin();
+		v= em.merge(v);
+		em.remove(v);
+		em.getTransaction().commit();
+		em.close();
+	}
+
+	
+	
+
 }

@@ -8,7 +8,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import model.entities.Coche;
-import model.entities.Fabricante;
+import model.entities.Concesionario;
 
 public class ControladorCoche {
 
@@ -133,24 +133,23 @@ public class ControladorCoche {
 	 * @param id
 	 * @return
 	 */
-	public void borrar(Coche f) {
+	public void borrar(Coche c) {
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
-		em.remove(f);
+		c=em.merge(c);
+		em.remove(c);
 		em.getTransaction().commit();
 		em.close();
 	}
-
-	public List<Coche> findAll() {
-EntityManager em = factory.createEntityManager();
+	public List<Coche> findAll () {
+		EntityManager em = factory.createEntityManager();
 		
-		Query q = em.createNativeQuery("SELECT * FROM fabricante", Fabricante.class);
+		Query q = em.createNativeQuery("SELECT * FROM coche", Coche.class);
 		
 		List<Coche> list = (List<Coche>) q.getResultList();
 		em.close();
 		return list;
 	}
-
 	
 	
 

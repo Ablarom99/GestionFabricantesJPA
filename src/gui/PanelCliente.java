@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import model.entities.Cliente;
 import model.entities.controllers.ControladorCliente;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -58,19 +59,19 @@ public class PanelCliente extends JPanel{
 		}
 	}
 	private void cargarActualDesdePantalla() {
-		this.jtfid.setText("" + this.actual.getId());
-		this.jtfnombre.setText(this.actual.getNombre());
-		this.jtfapellidos.setText(this.actual.getApellidos());
-		this.jtflocalidad.setText(this.actual.getLocalidad());
-		this.jtfdniNie.setText(this.actual.getDniNie());
-		try {
+        this.actual.setId(Integer.parseInt(jtfid.getText()));
+        this.actual.setNombre(jtfnombre.getText());
+        this.actual.setApellidos(jtfapellidos.getText());
+        this.actual.setDniNie(jtfdniNie.getText());
+        this.actual.setLocalidad(jtflocalidad.getText());
+        this.actual.setActivo(jcbActivo.isSelected());
+        try {
             this.actual.setFechaNac(this.formatoFecha.parse(jtfFechaNac.getText()));
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-		this.actual.setActivo(jcbActivo.isSelected());
-	}
+    }
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -278,25 +279,20 @@ public class PanelCliente extends JPanel{
 		cargarActualEnPantalla();
 		
 	}
-	
-	
 	private void guardar () {
 		cargarActualDesdePantalla();
-		// Decido si se trata de guardar un registro existente o nuevo
-		if (this.actual.getId() != 0) { // Modificacion
-			int regsAfec = ControladorCliente.getInstance().modificar(this.actual);
-			if (regsAfec > 0) {
-				JOptionPane.showMessageDialog(null, "Registro modificado correctamente");
-			}
+		boolean resultado = ControladorCliente.getInstance().guardar(this.actual);
+		if (resultado == true && this.actual != null && this.actual.getId() > 0) {
+			this.jtfid.setText("" + this.actual.getId());
+			JOptionPane.showMessageDialog(null, "Registro guardado correctamente");
 		}
-		else { // Alta -  nuevo
-			int idNuevoReg = ControladorCliente.getInstance().nuevo(this.actual);
-			if (idNuevoReg > 0) {
-				this.jtfid.setText("" + idNuevoReg);
-				JOptionPane.showMessageDialog(null, "Registro insertado correctamente");
-			}
+		else {
+			JOptionPane.showMessageDialog(null, "Error al guardar");
 		}
 	}
+	
+	
+
 	
 	private void vaciarCampos() {
 		this.jtfid.setText("0");
@@ -310,16 +306,13 @@ public class PanelCliente extends JPanel{
 	}
 	
 	private void borrar() {
-		String posiblesRespuestas[] = {"Si�","No"};
-		// En esta opcion se utiliza un showOptionDialog en el que personalizo el icono mostrado
-		int opcionElegida = JOptionPane.showOptionDialog(null, "�Desea eliminar?", "Gestion venta de coches", 
+		String posiblesRespuestas[] = {"Sí","No"};
+		// En esta opci�n se utiliza un showOptionDialog en el que personalizo el icono mostrado
+		int opcionElegida = JOptionPane.showOptionDialog(null, "¿Desea eliminar?", "Gestión venta de coches", 
 		        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, posiblesRespuestas, posiblesRespuestas[1]);
 	    if(opcionElegida == 0) {
-	    	int regsAfectados = ControladorCliente.getInstance().borrar(this.actual.getId());
-	    	if (regsAfectados > 0) {
-	    		vaciarCampos();
-	    		JOptionPane.showMessageDialog(null, "Eliminado correctamente");
-	    	}
+	    	ControladorCliente.getInstance().borrar(this.actual);
+	    	vaciarCampos();
 	    }
 	}
 

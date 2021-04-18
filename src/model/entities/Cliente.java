@@ -23,6 +23,7 @@ public class Cliente implements Serializable {
 
 	private String apellidos;
 
+
 	private String dniNie;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -30,7 +31,9 @@ public class Cliente implements Serializable {
 
 	private String localidad;
 
+
 	private String nombre;
+
 
 	//bi-directional many-to-one association to Venta
 	@OneToMany(mappedBy="cliente")
@@ -59,9 +62,13 @@ public class Cliente implements Serializable {
 		return this.apellidos;
 	}
 
+
+
+
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
+
 
 	public String getDniNie() {
 		return this.dniNie;
@@ -71,6 +78,7 @@ public class Cliente implements Serializable {
 		this.dniNie = dniNie;
 	}
 
+
 	public Date getFechaNac() {
 		return this.fechaNac;
 	}
@@ -79,6 +87,7 @@ public class Cliente implements Serializable {
 		this.fechaNac = fechaNac;
 	}
 
+
 	public String getLocalidad() {
 		return this.localidad;
 	}
@@ -86,6 +95,7 @@ public class Cliente implements Serializable {
 	public void setLocalidad(String localidad) {
 		this.localidad = localidad;
 	}
+
 
 	public String getNombre() {
 		return this.nombre;

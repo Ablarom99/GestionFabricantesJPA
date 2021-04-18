@@ -3,8 +3,6 @@ package model.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import model.entities.Cliente;
-
 import java.util.Date;
 
 
@@ -13,7 +11,6 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="venta")
 @NamedQuery(name="Venta.findAll", query="SELECT v FROM Venta v")
 public class Venta implements Serializable {
 	private static final long serialVersionUID = 1L;
